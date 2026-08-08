@@ -1,0 +1,22 @@
+@startuml
+title Гипотетический сценарий (не согласован с заказчиком) — Синхронизация остатков с 1С
+
+actor "Планировщик" as Cron
+participant "Наша Система" as System
+participant "1C" as OneC
+
+Cron -> System: Запустить синхронизацию
+activate System
+System -> OneC: Запросить информацию об остатках
+activate OneC
+alt 1C ответила успешно
+   OneC --> System: Список товаров по остаткам
+   System -> System: Обновить остаток товаров\n(данные 1С считаются основными)
+else 1С ответила неуспешно
+   OneC --> System: Ошибка/таймаут
+   System -> System: Остатки без изменений,\nзафиксировать ошибку в логе
+end
+deactivate OneC
+System --> Cron: Синхронизация завершена
+deactivate System
+@enduml

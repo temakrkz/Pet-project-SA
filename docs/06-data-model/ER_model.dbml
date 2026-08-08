@@ -1,0 +1,48 @@
+// ER-модель: Автоматизация процесса "Оформление заказа"
+// Компания "ТоргОпт" (оптовая торговля стройматериалами)
+// Импортировать на dbdiagram.io для визуализации
+
+Table manager {
+  id integer [pk, increment]
+  name varchar(100)
+  surname varchar(100)
+}
+
+Table client {
+  id integer [primary key]
+  name varchar(100)
+  surname varchar(100)
+  phone varchar(20) [unique, note: 'Уникальность — защита от дублирования клиента между менеджерами (Т2)']
+  created_at timestamp [default: `now()`]
+  manager_id int [ref: > manager.id, note: 'Ответственный менеджер за клиента']
+}
+
+Table product {
+  id integer [primary key, increment]
+  name varchar(255)
+  quantity integer [note: 'Остаток на складе, общий по всем заказам']
+  last_refill timestamp [note: 'Дата последнего обновления остатка/инвентаризации']
+  price_for_one decimal(10,2)
+}
+
+Table order {
+  id integer [primary key]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+  client_id int [ref: > client.id]
+  status varchar(20) [not null, note: 'Новый | Подтверждён | В сборке | Отправлен | Отменён']
+  amount decimal(10,2) [note: 'Денормализовано: сумма price_for_product по всем связанным product_in_order']
+  cancel_reason text [note: 'Обязательно при статусе Отменён']
+}
+
+Table product_in_order {
+  id integer [primary key]
+  product_id int [ref: > product.id]
+  order_id int [ref: > order.id]
+  order_quantity int
+  price_for_product decimal(10,2) [note: 'Цена, зафиксированная на момент оформления заказа (историчность)']
+
+  indexes {
+    (order_id, product_id) [unique, note: 'Запрет дублирования одного товара в одном заказе']
+  }
+}
