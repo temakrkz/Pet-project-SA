@@ -6,12 +6,6 @@ info:
     API для автоматизации процесса «Оформление заказа» (компания оптовой торговли стройматериалами).
     Роли и авторизация — см. раздел ниже.
 
-# --------------------------------------------------------------------------
-# Авторизация (недостающая часть, добавлена при сборке портфолио).
-# Схема сознательно простая — Bearer JWT, без детализации до уровня OAuth-флоу,
-# т.к. это не было предметом обсуждения с заказчиком. Роли соответствуют
-# участникам to-be процесса: Менеджер, Кладовщик, Руководитель.
-# --------------------------------------------------------------------------
 security:
   - bearerAuth: []
 
@@ -336,71 +330,106 @@ components:
       bearerFormat: JWT
       description: >
         Роли передаются в теле токена (claim `role`): manager | warehouse | manager_head.
-        Проверка роли на уровне эндпоинта — см. пометки security у операций.
 
   schemas:
     ClientRequest:
       type: object
       required: [name, surname, phone]
       properties:
-        name: { type: string }
-        surname: { type: string }
-        phone: { type: string }
+        name:
+          type: string
+        surname:
+          type: string
+        phone:
+          type: string
 
     ClientResponse:
       type: object
       properties:
-        id: { type: integer, readOnly: true }
-        name: { type: string }
-        surname: { type: string }
-        phone: { type: string }
-        manager_id: { type: integer, readOnly: true }
-        created_at: { type: string, format: date-time, readOnly: true }
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        surname:
+          type: string
+        phone:
+          type: string
+        manager_id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
 
     ClientUpdate:
       type: object
       properties:
-        name: { type: string }
-        surname: { type: string }
-        phone: { type: string, minLength: 12, maxLength: 13 }
+        name:
+          type: string
+        surname:
+          type: string
+        phone:
+          type: string
+          minLength: 12
+          maxLength: 13
 
     ProductRequest:
       type: object
       required: [name, quantity, price_for_one]
       properties:
-        name: { type: string }
-        quantity: { type: integer }
-        price_for_one: { type: number }
+        name:
+          type: string
+        quantity:
+          type: integer
+        price_for_one:
+          type: number
 
     ProductResponse:
       type: object
       properties:
-        id: { type: integer, readOnly: true }
-        name: { type: string }
-        quantity: { type: integer }
-        last_refill: { type: string, format: date-time, readOnly: true }
-        price_for_one: { type: number }
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        quantity:
+          type: integer
+        last_refill:
+          type: string
+          format: date-time
+          readOnly: true
+        price_for_one:
+          type: number
 
     ProductUpdate:
       type: object
       properties:
-        name: { type: string }
-        quantity: { type: integer }
-        price_for_one: { type: number }
+        name:
+          type: string
+        quantity:
+          type: integer
+        price_for_one:
+          type: number
 
     ProductOrder:
       type: object
       required: [product_id, order_quantity]
       properties:
-        product_id: { type: integer }
-        order_quantity: { type: integer }
-        price_for_product: { type: number }
+        product_id:
+          type: integer
+        order_quantity:
+          type: integer
+        price_for_product:
+          type: number
 
     OrderRequest:
       type: object
       required: [client_id, product_order]
       properties:
-        client_id: { type: integer }
+        client_id:
+          type: integer
         product_order:
           type: array
           items:
@@ -409,27 +438,50 @@ components:
     OrderResponse:
       type: object
       properties:
-        id: { type: integer, readOnly: true }
-        created_at: { type: string, format: date-time, readOnly: true }
-        updated_at: { type: string, format: date-time, readOnly: true }
-        client_id: { type: integer }
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        client_id:
+          type: integer
         status:
           type: string
           readOnly: true
-          enum: [Новый, Подтверждён, В сборке, Отправлен, Отменён]
-        amount: { type: number, readOnly: true }
-        cancel_reason: { type: string, nullable: true }
+          enum:
+            - Новый
+            - Подтверждён
+            - В сборке
+            - Отправлен
+            - Отменён
+        amount:
+          type: number
+          readOnly: true
+        cancel_reason:
+          type: string
+          nullable: true
 
     OrderUpdate:
       type: object
       properties:
-        client_id: { type: integer }
+        client_id:
+          type: integer
 
     Error:
       type: object
       properties:
-        error: { type: string, example: invalid_request }
-        message: { type: string, example: "Некорректный запрос" }
+        error:
+          type: string
+          example: invalid_request
+        message:
+          type: string
+          example: "Некорректный запрос"
 
   parameters:
     ProductId:
@@ -437,33 +489,40 @@ components:
       in: path
       required: true
       description: Идентификатор товара
-      schema: { type: integer }
+      schema:
+        type: integer
 
     OrderId:
       name: orderId
       in: path
       required: true
       description: Идентификатор заказа
-      schema: { type: integer }
+      schema:
+        type: integer
 
     ClientId:
       name: clientId
       in: path
       required: true
       description: Идентификатор клиента
-      schema: { type: integer }
+      schema:
+        type: integer
 
     Page:
       name: page
       in: query
       description: Номер страницы
-      schema: { type: integer, default: 1 }
+      schema:
+        type: integer
+        default: 1
 
     Limit:
       name: limit
       in: query
       description: Количество элементов на странице
-      schema: { type: integer, default: 20 }
+      schema:
+        type: integer
+        default: 20
 
     Sort:
       name: sort
@@ -471,16 +530,21 @@ components:
       description: Поле для сортировки
       schema:
         type: string
-        enum: [name, quantity, price_for_one]
+        enum:
+          - name
+          - quantity
+          - price_for_one
 
     MaxPrice:
       name: max_price
       in: query
       description: Максимальная цена
-      schema: { type: number }
+      schema:
+        type: number
 
     MinPrice:
       name: min_price
       in: query
       description: Минимальная цена
-      schema: { type: number }
+      schema:
+        type: number
