@@ -12,7 +12,7 @@ Table client {
   id integer [primary key]
   name varchar(100)
   surname varchar(100)
-  phone varchar(20) [unique, note: 'Уникальность — защита от дублирования клиента между менеджерами (Т2)']
+  phone varchar(20) [unique, note: 'Уникальность — защита от дублирования клиента между менеджерами']
   created_at timestamp [default: `now()`]
   manager_id int [ref: > manager.id, note: 'Ответственный менеджер за клиента']
 }
