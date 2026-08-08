@@ -25,7 +25,6 @@ Excel-файлах, склад — в бумажной тетради. Из-за
 | 5 | **Use Case** — сценарии использования (текст + UML-диаграмма) | [`docs/05-use-cases/Use_Cases.md`](docs/05-use-cases/Use_Cases.md), [`use_case_diagram.png`](docs/05-use-cases/use_case_diagram.png) |
 | 6 | **ER-модель БД** | [`docs/06-data-model/ER_model.dbml`](docs/06-data-model/ER_model.dbml) |
 | 7 | **API** — спецификация OpenAPI + диаграмма последовательности | [`docs/07-api/openapi.yaml`](docs/07-api/openapi.yaml), [`sequence_1c_sync_hypothetical.puml`](docs/07-api/sequence_1c_sync_hypothetical.puml) |
-| 8 | **Wireframe** — черновой макет экрана кладовщика | [`docs/08-wireframes/order_card_warehouse.svg`](docs/08-wireframes/order_card_warehouse.svg) |
 
 ## Как читать проект
 
